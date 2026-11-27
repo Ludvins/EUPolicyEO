@@ -98,7 +98,8 @@ export function bm25(index: LexicalIndex, query: string): Map<number, number> {
   return scores;
 }
 
-export function withTopicEvidence(docs: Document[], scores: Map<number, number>, profile: RetrievalProfile) {
+export function withTopicEvidence(docs: Document[], scores: Map<number, number>, profile: RetrievalProfile,
+  titlesAndMeasurementsOnly = false) {
   const phrase = (text: string) => " " + tokenize(text).join(" ") + " ";
   const groups = profile.evidence_groups.map(group => group.map(phrase));
   const eligible = new Map<number, number>();
@@ -111,7 +112,9 @@ export function withTopicEvidence(docs: Document[], scores: Map<number, number>,
   for (const [index, score] of scores) {
     if (eligible.has(index)) continue;
     const doc = docs[index];
-    const fields = [doc.title, doc.description, ...(doc.keywords ?? [])]
+    const metadata = titlesAndMeasurementsOnly ? [doc.title, ...(doc.measurement_terms ?? [])] :
+      [doc.title, doc.description, ...(doc.keywords ?? [])];
+    const fields = metadata
       .filter((field): field is string => !!field)
       .map(phrase);
     if (groups.every(group => group.some(term => fields.some(field => field.includes(term))))) {

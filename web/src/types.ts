@@ -93,4 +93,5 @@ export interface EmbeddingPoint {
 export interface SearchTask {
   query: string; constraints: Constraints; mode: Mode;
   profile?: RetrievalProfile | null;
+  article20Point?: string | null;
 }

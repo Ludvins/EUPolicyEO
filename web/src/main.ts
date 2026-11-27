@@ -5,6 +5,7 @@ import { renderEmbeddingChart } from "./embedding-chart";
 import { renderDataset } from "./release-panels";
 import { evidenceUseLabels, showRecord } from "./result-details";
 import { setupScreening } from "./screening-panel";
+import { HABITAT_POINTS } from "./screening-evidence";
 import { formatScore, searchModes } from "./search-modes";
 import type { BBox, Constraints, Document as RecordDoc, EmbeddingPoint, Evidence, Mode, Result } from "./types";
 import "./styles.css";
@@ -89,7 +90,9 @@ function showEvidence() {
     source.rel = "noopener noreferrer";
     evidence.append(source);
   }
-  if (req.search_profile && Object.keys(req.search_profile.record_evidence ?? {}).length) {
+  if (section.point && HABITAT_POINTS.has(section.point)) {
+    evidence.append(node("p", "Habitat search uses collection titles, documented measurements and source-checked evidence."));
+  } else if (req.search_profile && Object.keys(req.search_profile.record_evidence ?? {}).length) {
     evidence.append(node("p", "Source-documented results appear first. Open a result to see what it supports."));
   }
   query.value = (req.search_profile?.query ?? req.query).slice(0, 2000);
@@ -260,7 +263,7 @@ function search(event?: Event) {
       fallback.hidden = selectedMode === "bm25";
     };
     worker.postMessage({ id, releaseId: release.manifest.release_id,
-      query: query.value, mode: selectedMode, constraints, profile, project: selectedMode === "dense" });
+      query: query.value, mode: selectedMode, constraints, profile, article20Point: point, project: selectedMode === "dense" });
   } catch (error) {
     status.textContent = error instanceof Error ? error.message : "Search failed.";
   }

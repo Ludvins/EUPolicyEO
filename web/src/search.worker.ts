@@ -1,6 +1,7 @@
 import { Release } from "./assets";
 import { projectEmbeddings } from "./projection";
 import { bm25, evidenceForms, hybridRank, rank, supportedRows, withTopicEvidence } from "./ranking";
+import { HABITAT_POINTS, habitatSearchEvidence } from "./screening-evidence";
 import type { Corpus, EmbeddingPoint, SearchTask } from "./types";
 import type { Encoder } from "./dense";
 
@@ -37,14 +38,23 @@ async function search(task: SearchTask & { id: number; releaseId: string; parity
   const results = await Promise.all(corpora.map(async corpus => {
     if (!documents.has(corpus)) documents.set(corpus, await release.corpus(corpus));
     const {docs, index} = documents.get(corpus)!;
+    const point = task.article20Point;
+    const habitat = corpus === "eo" && task.profile && point && HABITAT_POINTS.has(point)
+      ? habitatSearchEvidence(docs, point, task.profile)
+      : undefined;
+    const profile = habitat?.profile ?? task.profile;
     let eligible: number[] | undefined;
-    if (!task.profile && release.manifest.free_text_policy) {
+    if (!profile && release.manifest.free_text_policy) {
       if (!forms.has(corpus)) forms.set(corpus, evidenceForms(index));
       eligible = supportedRows(index, forms.get(corpus)!, query, release.manifest.free_text_policy);
       if (!eligible.length) return [];
     }
     const scope = (scores: Map<number, number>) => {
-      if (task.profile) return withTopicEvidence(docs, scores, task.profile);
+      if (profile) {
+        const matches = withTopicEvidence(docs, scores, profile, Boolean(habitat));
+        habitat?.excluded.forEach(row => matches.delete(row));
+        return matches;
+      }
       if (eligible) return new Map(eligible.map(i => [i, scores.get(i) ?? 0]));
       return scores;
     };
@@ -59,10 +69,10 @@ async function search(task: SearchTask & { id: number; releaseId: string; parity
         vectors.set(corpus, new DataView(matrix));
       }
       const semantic = scope(dense.cosineVectors(vectors.get(corpus)!, vector, docs.length));
-      if (lexical) return hybridRank(docs, lexical, semantic, task.constraints, task.profile);
-      return rank(docs, semantic, task.constraints, 10, task.profile);
+      if (lexical) return hybridRank(docs, lexical, semantic, task.constraints, profile);
+      return rank(docs, semantic, task.constraints, 10, profile);
     }
-    return rank(docs, lexical!, task.constraints, 10, task.profile);
+    return rank(docs, lexical!, task.constraints, 10, profile);
   }));
   let projection: EmbeddingPoint[] | undefined;
   if (task.project && vector && results.some(group => group.length)) {

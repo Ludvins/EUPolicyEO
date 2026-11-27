@@ -1,3 +1,5 @@
+import type { Document, RetrievalProfile } from "./types";
+
 interface CatalogueEvidence {
   points: string;
   kind: "context" | "outside_scope" | "research_report" | "insufficient";
@@ -8,6 +10,7 @@ interface CatalogueEvidence {
 }
 
 const cmr = "https://cmr.earthdata.nasa.gov/search/collections.umm_json?concept_id=";
+export const HABITAT_POINTS = new Set(["a", "h", "j"]);
 
 // These assessments apply only to the verified provider collection and provision.
 const catalogue: Record<string, CatalogueEvidence> = {
@@ -67,9 +70,44 @@ const catalogue: Record<string, CatalogueEvidence> = {
     detail: "The catalogue describes planned satellite support for a North Atlantic marine study. Check for a data product with documented measurements and coverage before using it for habitat condition.",
     sourceUrl: cmr + "C1214610817-SCIOPS",
   },
+  "cmr:C1214607651-SCIOPS": {
+    points: "ahj",
+    kind: "outside_scope",
+    detail: "The survey monitored the chemistry of U.S. lakes and streams as part of a national acid precipitation programme.",
+    sourceUrl: cmr + "C1214607651-SCIOPS",
+  },
+  "cmr:C2231552858-CEOS_EXTRA": {
+    points: "ahj",
+    kind: "outside_scope",
+    detail: "The mapped stream and sediment chemistry covers the six New England states in the United States.",
+    sourceUrl: cmr + "C2231552858-CEOS_EXTRA",
+  },
+  "cmr:C1214610588-SCIOPS": {
+    points: "a",
+    kind: "insufficient",
+    detail: "The catalogue describes the remote-sensing work package of a North Sea fisheries programme. It documents planned methods and their uses for research.",
+    sourceUrl: cmr + "C1214610588-SCIOPS",
+  },
 };
 
 export function catalogueEvidence(point: string, id: string): CatalogueEvidence | undefined {
   const entry = catalogue[id];
   return point && entry?.points.includes(point) ? entry : undefined;
+}
+export function habitatSearchEvidence(docs: Document[], point: string, profile: RetrievalProfile) {
+  const recordEvidence = { ...profile.record_evidence };
+  const excluded = new Set<number>();
+  docs.forEach((doc, index) => {
+    if (Object.hasOwn(recordEvidence, doc.id)) return;
+    const evidence = catalogueEvidence(point, doc.id);
+    if (!evidence) return;
+    if (evidence.kind === "context") {
+      recordEvidence[doc.id] = {
+        role: "supporting_context", note: evidence.detail, source_url: evidence.sourceUrl,
+      };
+    } else {
+      excluded.add(index);
+    }
+  });
+  return { profile: { ...profile, record_evidence: recordEvidence }, excluded };
 }

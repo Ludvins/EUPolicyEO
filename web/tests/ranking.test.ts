@@ -65,6 +65,22 @@ it("places source-documented evidence above metadata matches while preserving sc
   expect(rank(docs, eligible, {bbox: [0, 0, 2, 2], strict_metadata: true}, 10, profile)).toEqual([]);
 });
 
+it("requires a title or measured variable for unreviewed habitat collections", () => {
+  const collections = [
+    { ...doc, id: "cmr:tags", title: "National water survey", keywords: ["Aquatic ecosystems", "Water quality"] },
+    { ...doc, id: "cdse:variable", title: "Wetland observations", measurement_terms: ["Vegetation condition"] },
+    { ...doc, id: "cmr:documented", title: "Vegetation index" },
+  ];
+  const scores = new Map([[0, 9], [1, 4], [2, 2]]);
+  const profile: RetrievalProfile = { query: "habitat condition", evidence_groups: [
+    ["ecosystems", "wetland"], ["quality", "condition"],
+  ], record_evidence: {
+    "cmr:documented": { role: "supporting_context", note: "Vegetation context", source_url: "https://cmr.earthdata.nasa.gov/" },
+  } };
+  expect([...withTopicEvidence(collections, scores, profile).keys()]).toEqual([2, 0]);
+  expect([...withTopicEvidence(collections, scores, profile, true).keys()]).toEqual([2, 1]);
+});
+
 it("fits small areas and uses a wrapped regional view for meridian crossings", () => {
   const box = fitBounds([-7.5, 36, -1.5, 38.8]);
   expect(box[0]).toBeLessThan(-7.5);

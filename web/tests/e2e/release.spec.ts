@@ -288,8 +288,7 @@ test("Article 20 assessment screens the returned collections with editable crite
   const glance = matrix.getByRole("row").filter({ hasText: "Global Land Cover Mapping and Estimation Yearly 30 m V001" });
   if (await glance.count()) {
     await expect(glance.getByRole("cell")).toHaveText(["Partial", "Partial"]);
-    await expect(matrix.getByRole("row").filter({ hasText: "Mt. Pisgah Campground" }).getByRole("cell"))
-      .toHaveText(["Fails", "Fails"]);
+    await expect(matrix.getByRole("row").filter({ hasText: "Mt. Pisgah Campground" })).toHaveCount(0);
     await maximum.fill("20");
     await assess.click();
     await expect(glance.getByRole("cell")).toHaveText(["Partial", "Fails", "Fails"]);
@@ -303,6 +302,38 @@ test("Article 20 assessment screens the returned collections with editable crite
   await search.click();
   await expect(page.locator("#search-status")).toContainText("Keyword search");
   if (await page.locator("#eo .result-title").count() === 0) await expect(panel).toBeHidden();
+});
+
+test("habitat condition search returns the source-checked collections in all three modes", async ({ page }) => {
+  test.skip(!manifest?.dense || manifest.public_corpus_hash !== "b344066e91e016f9fbd2f46e692d04578103498126ecd78ad0ff43ad5db3efc7",
+    "Uses the known habitat records in the portfolio release");
+  await page.goto("./");
+  const search = page.getByRole("button", { name: "Search", exact: true });
+  const mode = page.getByLabel("Search mode");
+  const titles = page.locator("#eo .result-title");
+  await page.getByLabel("Search starting point").selectOption({ label: "20(1)(a) · Habitat condition and trends" });
+  for (const [id, label] of [["bm25", "Keyword search"], ["dense", "Semantic search"], ["hybrid", "Hybrid search"]]) {
+    await mode.selectOption(id);
+    await search.click();
+    await expect(page.locator("#search-status")).toHaveText(new RegExp("^\\d+ results? · " + label + "$"), { timeout: 90_000 });
+    await expect(titles).toHaveCount(3);
+    await expect(page.locator("#eo")).toContainText("Urban Atlas Land Cover and Land Use Change");
+    await expect(page.locator("#eo")).toContainText("Vegetation Quality Index for Europe");
+    await expect(page.locator("#eo")).toContainText("Land Cover Map (LCM)");
+  }
+  await titles.filter({ hasText: "Vegetation Quality Index for Europe" }).click();
+  await expect(page.getByRole("link", { name: "Read the evidence source (CMR JSON)" }))
+    .toHaveAttribute("href", /concept_id=C1214155224-SCIOPS/);
+  await page.keyboard.press("Escape");
+  const panel = page.locator("#search-assessment");
+  await panel.getByText("Assess these collections", { exact: true }).click();
+  await panel.getByRole("button", { name: "Assess collections", exact: true }).click();
+  await expect(panel.locator("tbody td:last-child")).toHaveText(["Partial", "Partial", "Partial"]);
+
+  await mode.selectOption("bm25");
+  await page.getByLabel("Search query").fill("National Surface Water Survey");
+  await search.click();
+  await expect(titles.first()).toHaveText("National Surface Water Survey (NSWS)");
 });
 
 test("source-linked suitability matrix compares indicators and exposes sampled coverage", async ({page}) => {

@@ -18,6 +18,8 @@ The local rankers use the normalized snapshot. Publication applies a field allow
 
 For legal presets, documented direct measurements and research methods come first, followed by documented supporting context and catalogue term matches. Within each group, the selected ranker uses its original score and stable ID ties. A documented result can have a zero BM25 score when its indexed fields share no query tokens. The evidence note links to the source used to establish the result's role.
 
+In the browser, the habitat presets in Article 20(1)(a), (h), and (j) apply a collection eligibility check before ranking. They retain source-documented uses and require title or measured-variable support for other collections. Reviewed report entries, research plans with insufficient observation evidence, and documented geographic exclusions are omitted from those preset searches. The parity results below cover the archived Python and browser ranking probes. [Habitat assessment](policy_assessment.md#interactive-assessment)
+
 The free-text evidence policy checks candidate support before BM25 or cosine ordering. It removes generic request words and normalizes simple plurals. A single informative term needs one match. Queries with two to four informative terms need two distinct matching forms. Longer queries need three matching forms or two neighboring query terms. The check can miss relevant records described with different terminology. [Retriever](../src/eupolicyeo/retrieval.py)
 
 Semantic results offer an optional two-dimensional PCA view of the query and currently returned document vectors. It is a projection of the displayed sample. The result order and similarity scores use the original embedding dimensions.

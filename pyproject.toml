@@ -1,6 +1,6 @@
 [project]
 name = "eupolicyeo"
-version = "0.2.0"
+version = "0.2.1"
 description = "Evidence-linked EU policy, research and EO discovery"
 readme = "README.md"
 license = "MIT"

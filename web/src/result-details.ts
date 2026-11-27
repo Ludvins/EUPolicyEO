@@ -186,8 +186,12 @@ function matchDetails(result: Result, ranker: Mode) {
     const { role, note, source_url } = result.evidence_use;
     section.append(element("h4", evidenceUseLabels[role]), element("p", note));
     const source = secureLink("Read the evidence source", source_url,
-      ["land.copernicus.eu", "cordis.europa.eu"]);
-    if (source) section.append(source);
+      ["land.copernicus.eu", "cordis.europa.eu", "stac.dataspace.copernicus.eu", "cmr.earthdata.nasa.gov", "doi.org"]);
+    if (source) {
+      if (source.hostname === "stac.dataspace.copernicus.eu") source.append(" (STAC JSON)");
+      if (source.hostname === "cmr.earthdata.nasa.gov") source.append(" (CMR JSON)");
+      section.append(source);
+    }
   }
   if (descriptions[compatibility]) section.append(element("p", descriptions[compatibility]));
   return section;

@@ -1,6 +1,16 @@
 # Article 20 policy-to-product assessment
 
-The assessed workflow starts with the actual provision, separates the monitored indicators and compares real product records and provider evidence. The local stack reads the archived sources and generates the matrix. The Pages explorer reads the same validated assessment from its release without contacting the local API. [Legal text](https://eur-lex.europa.eu/eli/reg/2024/1991/oj/eng#art_20)
+The explorer links Article 20 monitoring provisions to EO catalogue searches. It can screen the returned collections in the browser. The reproducible Andalusia worked example also draws on item-level evidence archived by the local stack. [Legal text](https://eur-lex.europa.eu/eli/reg/2024/1991/oj/eng#art_20)
+
+## Interactive assessment
+
+Choose an Article 20(1) monitoring provision and run the search. **Assess these collections** appears when the search returns EO records. The matrix preserves the returned EO collection list and order. Each product opens the same source record shown in search.
+
+Choose direct measurement or allow documented supporting context. You can also set a maximum spatial resolution, a bounding rectangle and UTC dates. Area and dates start with the search filters. Editing assessment criteria screens the same candidate set, and editing the search clears the previous assessment.
+
+The screen uses the release's documented evidence links, catalogue fields and provider records checked for specific provision–collection pairs. A direct measurement describes a specific contribution to the provision. For Article 20(1)(h), NASA's GLanCE land-cover maps provide historical context for identifying possible habitats. The USGS study of a campground in North Carolina fails the contribution criterion because its observations fall outside the EU monitoring area. [NASA GLanCE](https://doi.org/10.5067/MEaSUREs/GLanCE/GLanCE30.001) · [USGS study](https://pubs.usgs.gov/of/2004/1073/)
+
+Catalogue overlap provides partial evidence for area and dates. Missing metadata or a missing documented contribution produces an unknown criterion. The overall result reports the first applicable outcome in this order **Fails**, **Unknown**, **Partial**, **Meets**. Open **Evidence by collection** for the reasoning and sources. Review local accuracy and individual observations before relying on a result for reporting.
 
 ## Andalusia case
 
@@ -74,4 +84,4 @@ uv run eupolicyeo resolve-inventory --snapshot SNAPSHOT --output artifacts/inven
 uv run eupolicyeo refresh-inventory --previous SNAPSHOT --output artifacts/refresh.json
 ```
 
-`GET /assessments/urban` serves the default matrix from the loaded registry model. `POST /assessments/urban` accepts a scenario with different bounds, years and thresholds. For an already staged release, open **Assessment** from the browser navigation. [API and deployment guide](deployment.md)
+`GET /assessments/urban` serves the Andalusia matrix from the loaded registry model. `POST /assessments/urban` accepts a scenario with different bounds, years and thresholds for that case. Open **Worked example** from the browser navigation to view the archived matrix. [API and deployment guide](deployment.md)

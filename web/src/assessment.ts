@@ -1,8 +1,8 @@
 import type { Release } from "./assets";
 import briefExample from "../../reports/policy_brief.json" with { type: "json" };
+import type { AssessmentStatus as Status } from "./screening";
 import "./assessment.css";
 
-type Status = "meets" | "partial" | "fails" | "unknown";
 type Criterion = {key: string; label: string; status: Status; detail: string; source_url: string};
 type Product = {id: string; title: string; source_url: string;
   results: {indicator: string; status: Status; summary: string; criteria: Criterion[]}[];
@@ -20,20 +20,25 @@ type Matrix = {
 };
 
 const labels: Record<Status, string> = {meets: "Meets", partial: "Partial", fails: "Fails", unknown: "Unknown"};
-const domains = new Set(["eur-lex.europa.eu", "land.copernicus.eu", "library.land.copernicus.eu", "stac.dataspace.copernicus.eu"]);
+const domains = new Set([
+  "eur-lex.europa.eu", "land.copernicus.eu", "library.land.copernicus.eu", "stac.dataspace.copernicus.eu",
+  "cmr.earthdata.nasa.gov", "seabass.gsfc.nasa.gov", "pubs.usgs.gov", "doi.org",
+]);
 const report = "reports/suitability.json";
 
-function element<K extends keyof HTMLElementTagNameMap>(tag: K, text?: string, className?: string) {
+export function element<K extends keyof HTMLElementTagNameMap>(tag: K, text?: string, className?: string) {
   const node = document.createElement(tag);
   if (text) node.textContent = text;
   if (className) node.className = className;
   return node;
 }
 
-function link(label: string, target: string) {
+export function link(label: string, target: string) {
+  if (!URL.canParse(target)) return element("span", label);
   const url = new URL(target);
   if (url.protocol !== "https:" || !domains.has(url.host) || url.username || url.password) return element("span", label);
   if (url.host === "stac.dataspace.copernicus.eu") label += " (STAC JSON)";
+  if (url.host === "cmr.earthdata.nasa.gov") label += " (CMR JSON)";
   const anchor = element("a", label);
   anchor.href = url.href;
   anchor.target = "_blank";
@@ -41,8 +46,37 @@ function link(label: string, target: string) {
   return anchor;
 }
 
-function badge(status: Status) {
+export function badge(status: Status) {
   return element("span", labels[status], "assessment-status status-" + status);
+}
+
+export function assessmentTable(caption: string, columns: string[],
+  rows: { title: HTMLElement; statuses: Status[] }[], region: string) {
+  const table = element("table", undefined, "assessment-table");
+  table.createCaption().textContent = caption;
+  const headings = table.createTHead().insertRow();
+  for (const label of ["EO product", ...columns, "Overall"]) {
+    const header = element("th", label);
+    header.scope = "col";
+    headings.append(header);
+  }
+  const body = table.createTBody();
+  for (const { title, statuses } of rows) {
+    const row = body.insertRow();
+    const heading = element("th");
+    heading.scope = "row";
+    heading.append(title);
+    row.append(heading);
+    for (const status of statuses) row.insertCell().append(badge(status));
+  }
+  const scroll = element("div", undefined, "assessment-scroll");
+  scroll.tabIndex = 0;
+  scroll.setAttribute("role", "region");
+  scroll.setAttribute("aria-label", region);
+  scroll.append(table);
+  const content = element("div");
+  content.append(element("p", "Scroll horizontally to see all criteria.", "assessment-scroll-hint"), scroll);
+  return content;
 }
 
 function criterionDetail(criterion: Criterion) {
@@ -91,25 +125,13 @@ function resultsFor(matrix: Matrix, id: string) {
     content.append(element("p", "No products were assessed for this indicator."));
     return content;
   }
-  const table = element("table", undefined, "assessment-table");
-  table.createCaption().textContent = "Fitness-for-purpose matrix";
-  const headings = table.createTHead().insertRow();
-  for (const title of ["EO product", ...rows[0].result.criteria.map(row => row.label), "Overall"]) {
-    const header = element("th", title);
-    header.scope = "col";
-    headings.append(header);
-  }
-  const body = table.createTBody();
+  const columns = rows[0].result.criteria.map(row => row.label);
+  content.append(assessmentTable("Fitness-for-purpose matrix", columns, rows.map(({ product, result }) => ({
+    title: link(product.title, product.source_url),
+    statuses: [...result.criteria.map(row => row.status), result.status],
+  })), "Scrollable EO product assessment matrix"));
   const details = element("div", undefined, "assessment-evidence");
   for (const {product, result} of rows) {
-    const item = body.insertRow();
-    const title = element("th");
-    title.scope = "row";
-    title.append(link(product.title, product.source_url));
-    item.append(title);
-    for (const row of result.criteria) item.insertCell().append(badge(row.status));
-    item.insertCell().append(badge(result.status));
-
     const disclosure = element("details");
     disclosure.append(element("summary", product.title), element("p", result.summary));
     const definitions = element("dl");
@@ -133,12 +155,7 @@ function resultsFor(matrix: Matrix, id: string) {
     }
     details.append(disclosure);
   }
-  const scroll = element("div", undefined, "assessment-scroll");
-  scroll.tabIndex = 0;
-  scroll.setAttribute("role", "region");
-  scroll.setAttribute("aria-label", "Scrollable EO product assessment matrix");
-  scroll.append(table);
-  content.append(element("p", "Scroll horizontally to see all criteria.", "assessment-scroll-hint"), scroll, details);
+  content.append(details);
   return content;
 }
 

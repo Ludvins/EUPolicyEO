@@ -13,7 +13,7 @@
         <a class="brand" href="#explorer"><span class="brand-mark" aria-hidden="true"></span>EUPolicyEO</a>
         <div class="nav-links">
           <a href="#explorer">Explorer</a>
-          <a id="assessment-nav" href="#assessment" hidden>Assessment</a>
+          <a id="assessment-nav" href="#assessment" hidden>Worked example</a>
           <a href="#dataset">Dataset</a>
         </div>
       </nav>
@@ -37,7 +37,7 @@
                 <option value="">Free-text search</option>
                 <optgroup id="legal-examples" label="Real legal provisions · Article 20"></optgroup>
               </select>
-              <p id="starting-point-help" class="field-note">Choose a legal query example to fill the search.</p>
+              <p id="starting-point-help" class="field-note">Choose a provision to search and assess its EO results.</p>
             </div>
             <div class="search-mode">
               <label for="mode">Search mode</label>
@@ -119,6 +119,48 @@
         </form>
         <p id="search-status" class="status search-status" role="status"></p>
         <button id="fallback" class="secondary-button" hidden type="button">Search with BM25</button>
+        <details id="search-assessment" class="portfolio-section assessment screening" hidden>
+          <summary>Assess these collections</summary>
+          <div class="screening-body">
+            <h2 id="screening-provision"></h2>
+            <p id="screening-scope-description" class="field-note"></p>
+            <form id="screening-form" aria-label="Assessment criteria">
+              <div class="assessment-settings search-settings">
+                <label>Evidence required
+                  <select id="screening-contribution">
+                    <option value="direct">Direct measurement</option>
+                    <option value="documented">Direct measurement or supporting context</option>
+                  </select>
+                </label>
+                <label>Maximum spatial resolution (m)
+                  <input id="screening-resolution" type="number" min="0" step="any" placeholder="Optional">
+                </label>
+              </div>
+              <details id="screening-scope">
+                <summary>Assessment area and dates</summary>
+                <p class="field-note">These start with your collection filters. Edit them here to screen the same results against a different scope.</p>
+                <div class="dates">
+                  <label>Assessment from (UTC)<input id="screening-start" type="date" max="9999-12-31"></label>
+                  <label>Assessment through (UTC)<input id="screening-end" type="date" max="9999-12-31"></label>
+                </div>
+                <fieldset class="coordinate-panel">
+                  <legend>Assessment bounds</legend>
+                  <div class="coordinates">
+                    <label>West longitude<input id="screening-west" type="number" min="-180" max="180" step="any"></label>
+                    <label>South latitude<input id="screening-south" type="number" min="-90" max="90" step="any"></label>
+                    <label>East longitude<input id="screening-east" type="number" min="-180" max="180" step="any"></label>
+                    <label>North latitude<input id="screening-north" type="number" min="-90" max="90" step="any"></label>
+                  </div>
+                  <p class="field-note">Use decimal degrees. West greater than east crosses the 180° meridian.</p>
+                </fieldset>
+              </details>
+              <button type="submit">Assess collections</button>
+              <p class="field-note">Assessments use catalogue metadata and source-linked evidence. Check individual observations and local accuracy before using a product for reporting.</p>
+            </form>
+            <p id="screening-status" class="status" role="status"></p>
+            <div id="screening-results"></div>
+          </div>
+        </details>
         <details id="embedding-map" class="embedding-panel" hidden>
           <summary>Embedding map</summary>
           <div id="embedding-content"></div>
@@ -129,7 +171,7 @@
         </div>
       </section>
       <section class="portfolio-section assessment" id="assessment" hidden aria-labelledby="assessment-title">
-        <h2 id="assessment-title">Urban monitoring assessment</h2>
+        <h2 id="assessment-title">Andalusia worked example</h2>
         <div id="assessment-content"></div>
       </section>
       <section class="portfolio-section" id="dataset" aria-labelledby="dataset-title">

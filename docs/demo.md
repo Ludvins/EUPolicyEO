@@ -6,6 +6,8 @@ Start the [static preview](deployment.md#preview-the-static-explorer). For the l
 
 Choose **Urban green space and tree canopy** from **Search starting point** and press **Search**. Follow the Article 20(1)(b) citation, then open one of the Tree Cover Density results. Its evidence note identifies the canopy measurement and the urban boundary needed to calculate the indicator. Choose **Pollinator abundance and diversity** to inspect the PollinERA and RestPoll field monitoring methods in the projects list. [Nature Restoration Regulation](https://eur-lex.europa.eu/eli/reg/2024/1991/oj/eng#art_20) · [Tree Cover Density](https://land.copernicus.eu/en/products/high-resolution-layer-forests-and-tree-cover?tab=tree_cover_density) · [PollinERA](https://cordis.europa.eu/project/id/101135005/reporting)
 
+Return to the tree-canopy provision and run the search. Open **Assess these collections**, set the maximum spatial resolution to **20 m**, and choose **Assess collections**. Compare the resolution cells for the 10 m and 100 m Tree Cover Density collections. Raise the threshold to **120 m** and assess again. The matrix screens the same search results under the new criteria. [Interactive assessment](policy_assessment.md#interactive-assessment)
+
 ## 2. Compare rankers on a free-text query
 
 Choose **Wetland restoration** and search in keyword mode. Switch to **Semantic search**, press **Search**, and open **Embedding map** to see the query and its returned neighbors projected into two dimensions. Select **Hybrid search** to combine the keyword and semantic rankings for the same query. [Model card](model_card.md)

@@ -1,9 +1,10 @@
 import { Release } from "./assets";
 import { renderAssessment } from "./assessment";
+import { parseBounds, parseDates } from "./constraints";
 import { renderEmbeddingChart } from "./embedding-chart";
-import { splitBox } from "./ranking";
 import { renderDataset } from "./release-panels";
 import { evidenceUseLabels, showRecord } from "./result-details";
+import { setupScreening } from "./screening-panel";
 import { formatScore, searchModes } from "./search-modes";
 import type { BBox, Constraints, Document as RecordDoc, EmbeddingPoint, Evidence, Mode, Result } from "./types";
 import "./styles.css";
@@ -56,6 +57,7 @@ const status = $("search-status");
 const fallback = $<HTMLButtonElement>("fallback");
 const results = document.querySelector<HTMLElement>(".results")!;
 const embeddingMap = $<HTMLDetailsElement>("embedding-map");
+const screening = setupScreening($<HTMLDetailsElement>("search-assessment"));
 
 let release: Release;
 const legalExamples = new Map<string, Evidence>();
@@ -159,12 +161,7 @@ async function showOnMap(doc: RecordDoc) {
 }
 
 function bounds(): BBox | undefined {
-  const values = coordinateFields.map(field => field.value);
-  if (!values.some(Boolean)) return undefined;
-  if (values.some(value => !value)) throw new Error("Enter all four bounding box coordinates.");
-  const box = values.map(Number) as BBox;
-  splitBox(box);
-  return box;
+  return parseBounds(coordinateFields.map(field => field.value));
 }
 
 function updateMap(map: MapController) {
@@ -195,11 +192,10 @@ async function openMap() {
 function filters(): Constraints {
   const start = $<HTMLInputElement>("start").value;
   const end = $<HTMLInputElement>("end").value;
-  if (start && end && start > end) throw new Error("Start date must be on or before the end date.");
+  const dates = parseDates(start, end);
   return {
     bbox: bounds(),
-    start: start ? start + "T00:00:00Z" : undefined,
-    end: end ? end + "T23:59:59.999Z" : undefined,
+    ...dates,
     strict_metadata: $<HTMLInputElement>("strict").checked,
   };
 }
@@ -209,6 +205,7 @@ function clearSearchResults() {
   status.textContent = "";
   fallback.hidden = true;
   results.hidden = true;
+  screening.clear();
   embeddingMap.hidden = true;
   $("embedding-content").replaceChildren();
 }
@@ -221,7 +218,10 @@ function search(event?: Event) {
     if (!query.value.trim()) throw new Error("Enter a search query.");
     const constraints = filters();
     const selectedMode = mode.value as Mode;
-    const profile = legalExamples.get(requirement.value)?.requirement.search_profile;
+    const selected = legalExamples.get(requirement.value);
+    const profile = selected?.requirement.search_profile;
+    const point = selected?.section.point;
+    const provision = requirement.value ? requirement.selectedOptions[0].textContent : "";
     const method = searchModes[selectedMode].label;
     status.textContent = "Running " + method.toLowerCase() + "…";
     worker ??= new Worker(new URL("./search.worker.ts", import.meta.url), { type: "module" });
@@ -240,6 +240,10 @@ function search(event?: Event) {
       showResults("eo", eo, selectedMode, !!profile);
       showResults("projects", projects, selectedMode, !!profile);
       results.hidden = false;
+      if (point) screening.show({
+        provision, point, collections: eo, constraints,
+        openRecord: result => showRecord(result, selectedMode, showOnMap),
+      });
       const count = eo.length + projects.length;
       status.textContent = count + (count === 1 ? " result" : " results") + " · " + method;
       if (points?.length) {

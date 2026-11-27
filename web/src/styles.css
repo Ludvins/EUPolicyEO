@@ -486,7 +486,8 @@ button:disabled { opacity: .48; cursor: default; }
 }
 .result h3 a { color: var(--ink); text-decoration-color: #b8d1c5; }
 .result h3 a:hover { color: var(--accent-strong); text-decoration-color: currentColor; }
-.result .result-title {
+.result .result-title,
+.screening .assessment-table .result-title {
   display: block;
   padding: 0;
   border: 0;
@@ -501,7 +502,12 @@ button:disabled { opacity: .48; cursor: default; }
   text-underline-offset: .17em;
   overflow-wrap: anywhere;
 }
-.result .result-title:hover { color: var(--accent-strong); background: transparent; text-decoration-color: currentColor; }
+.result .result-title:hover,
+.screening .assessment-table .result-title:hover {
+  color: var(--accent-strong);
+  background: transparent;
+  text-decoration-color: currentColor;
+}
 .result-meta {
   display: flex;
   flex-wrap: wrap;

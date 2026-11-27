@@ -2,9 +2,9 @@
 
 An evidence explorer and fitness-for-purpose assessment for EU environmental monitoring. The Andalusia case traces Article 20 of the EU Nature Restoration Regulation to two indicators, four Earth observation products, and the evidence gaps that remain. The explorer also searches Horizon Europe projects and EO catalogues.
 
-[Article 20 assessment](docs/policy_assessment.md) · [Demo walkthrough](docs/demo.md) · [Deployment guide](docs/deployment.md) · [Verification](docs/verification.md)
+[Live demo](https://ludvins.github.io/EUPolicyEO/) · [Article 20 assessment](docs/policy_assessment.md) · [Demo walkthrough](docs/demo.md) · [Deployment guide](docs/deployment.md) · [Verification](docs/verification.md)
 
-Open **Assessment** to explore the Andalusia worked example. Switch between tree canopy and green space, then expand the 10 m Tree Cover Density row to inspect yearly catalogue samples. **Example reporting brief** shows how the local retrieval-augmented generation workflow summarises the evidence with citations. In the explorer, try **Pollinator abundance and diversity** to find CORDIS field-monitoring methods. [Copernicus product](https://land.copernicus.eu/en/products/high-resolution-layer-forests-and-tree-cover?tab=tree_cover_density) · [PollinERA project report](https://cordis.europa.eu/project/id/101135005/reporting)
+Choose an Article 20 monitoring provision, run the search, and open **Assess these collections** to screen the returned EO products with your own criteria. The **Worked example** shows the source-linked Andalusia case, including yearly Tree Cover Density catalogue samples and a reporting brief produced by the local retrieval-augmented generation workflow. In the explorer, try **Pollinator abundance and diversity** to find CORDIS field-monitoring methods. [Copernicus product](https://land.copernicus.eu/en/products/high-resolution-layer-forests-and-tree-cover?tab=tree_cover_density) · [PollinERA project report](https://cordis.europa.eu/project/id/101135005/reporting)
 
 ## Browser explorer and local stack
 
@@ -13,7 +13,7 @@ The **browser explorer** is the portfolio demo. It answers questions like “Whi
 | | Browser explorer | Local Python stack |
 | --- | --- | --- |
 | **Where it runs** | GitHub Pages or the local Vite preview. Both serve the same browser app. | On your machine, either directly with Python or via Docker Compose. |
-| **What you can do** | Start from an Article 20 provision or enter your own query. Choose keyword, semantic or hybrid search, filter collection extents on a map, and open source records. | Query search and recommendations through FastAPI. With a matching inventory loaded, check individual observation records (granules) for a bounded area and period. |
+| **What you can do** | Start from an Article 20 provision or enter your own query. Choose keyword, semantic or hybrid search, filter collection extents on a map, and open source records. Screen the EO collections returned for a provision using your own criteria. | Query search and recommendations through FastAPI. With a matching inventory loaded, check individual observation records (granules) for a bounded area and period. |
 | **What it searches** | A versioned public subset with titles and selected metadata. | A richer normalized snapshot that can include project objectives and collection descriptions. |
 | **How releases are made** | The browser loads the bundle and runs searches on your device. | Ingest and normalize source data, build and benchmark indexes, manage model versions in MLflow, monitor API requests with Prometheus, and export a new browser release. |
 

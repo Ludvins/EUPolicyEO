@@ -225,6 +225,86 @@ test("portfolio preserves dataset provenance without displaying benchmark report
   expect(reportRequests).toEqual([]);
 });
 
+test("Article 20 assessment screens the returned collections with editable criteria", async ({ page }) => {
+  test.skip(!active, "Requires a staged release");
+  const requirements: Evidence[] = JSON.parse(fs.readFileSync(path.join(releaseRoot, "requirements.json"), "utf-8"));
+  const canopy = requirements.find(row => row.requirement.id === "32024R1991:eng:20:1:b:r0");
+  test.skip(!canopy?.requirement.search_profile?.record_evidence?.["cdse:clms_vlcc_tree-cover-density_europe_100m_yearly_v1"],
+    "Requires the portfolio release with documented Tree Cover Density collections");
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("./");
+  const provision = page.getByLabel("Search starting point");
+  const search = page.getByRole("button", { name: "Search", exact: true });
+  const panel = page.locator("#search-assessment");
+  await expect(panel).toBeHidden();
+  await provision.selectOption({ label: "20(1)(b) · Urban green space and tree canopy" });
+  await page.getByText("Collection filters", { exact: true }).click();
+  await page.getByLabel("From (UTC)", { exact: true }).fill("2021-01-01");
+  await search.click();
+  await panel.getByText("Assess these collections", { exact: true }).click();
+  await expect(panel.getByRole("heading")).toContainText("Article 20(1)(b)");
+  await expect(page.locator("#eo .result-title").first()).toBeVisible();
+  const assessmentStart = panel.getByLabel("Assessment from (UTC)", { exact: true });
+  await expect(assessmentStart).toHaveValue("2021-01-01");
+  await assessmentStart.fill("");
+  const titles = await page.locator("#eo .result-title").allTextContents();
+  const maximum = panel.getByLabel("Maximum spatial resolution (m)", { exact: true });
+  const assess = panel.getByRole("button", { name: "Assess collections", exact: true });
+  const matrix = panel.getByRole("table", { name: "Assessment of search results" });
+  const coarse = matrix.getByRole("row").filter({ hasText: /Tree Cover Density \(TCD\) Europe 100m yearly V1 \(COG\)/ });
+  const fine = matrix.getByRole("row").filter({ hasText: /Tree Cover Density \(TCD\) Europe 10m yearly V1 \(COG\)/ });
+  await maximum.fill("20");
+  await assess.click();
+  await expect(matrix.getByRole("rowheader")).toHaveText(titles);
+  await expect(coarse.getByRole("cell")).toHaveText(["Meets", "Fails", "Fails"]);
+  await expect(fine.getByRole("cell")).toHaveText(["Meets", "Meets", "Meets"]);
+  await panel.getByText("Evidence by collection", { exact: true }).click();
+  const coarseEvidence = panel.locator(".assessment-evidence > details").filter({ hasText: /Evidence for .*Europe 100m yearly V1 \(COG\)/ });
+  await coarseEvidence.locator("summary").click();
+  await expect(coarseEvidence.getByRole("link", { name: "Read evidence" })).toHaveAttribute("href", /land\.copernicus\.eu/);
+  await fine.getByRole("button").click();
+  await expect(page.getByRole("dialog")).toContainText("Tree Cover Density");
+  await page.keyboard.press("Escape");
+
+  await maximum.fill("120");
+  await expect(matrix).toBeHidden();
+  await panel.getByLabel("Assessment through (UTC)").fill("2017-12-31");
+  await assess.click();
+  await expect(coarse.getByRole("cell")).toHaveText(["Meets", "Meets", "Fails", "Fails"]);
+  await expect(matrix.getByRole("rowheader")).toHaveText(titles);
+  await expect(page.locator("#eo .result-title")).toHaveText(titles);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
+
+  await provision.selectOption({ label: "20(1)(h) · Habitat area and condition" });
+  await expect(panel).toBeHidden();
+  await search.click();
+  await panel.getByText("Assess these collections", { exact: true }).click();
+  await expect(panel.getByRole("heading")).toContainText("Article 20(1)(h)");
+  await assessmentStart.fill("");
+  await maximum.fill("");
+  await assess.click();
+  await expect(matrix.getByRole("rowheader")).toHaveText(await page.locator("#eo .result-title").allTextContents());
+  const glance = matrix.getByRole("row").filter({ hasText: "Global Land Cover Mapping and Estimation Yearly 30 m V001" });
+  if (await glance.count()) {
+    await expect(glance.getByRole("cell")).toHaveText(["Partial", "Partial"]);
+    await expect(matrix.getByRole("row").filter({ hasText: "Mt. Pisgah Campground" }).getByRole("cell"))
+      .toHaveText(["Fails", "Fails"]);
+    await maximum.fill("20");
+    await assess.click();
+    await expect(glance.getByRole("cell")).toHaveText(["Partial", "Fails", "Fails"]);
+    await maximum.fill("");
+    await assessmentStart.fill("2020-01-01");
+    await assess.click();
+    await expect(glance.getByRole("cell")).toHaveText(["Partial", "Unknown", "Unknown"]);
+  }
+
+  await provision.selectOption({ label: "20(1)(g) · Pollinator abundance and diversity" });
+  await search.click();
+  await expect(page.locator("#search-status")).toContainText("Keyword search");
+  if (await page.locator("#eo .result-title").count() === 0) await expect(panel).toBeHidden();
+});
+
 test("source-linked suitability matrix compares indicators and exposes sampled coverage", async ({page}) => {
   test.skip(!manifest?.assets["reports/suitability.json"], "Requires a released assessment");
   await page.setViewportSize({width: 390, height: 844});

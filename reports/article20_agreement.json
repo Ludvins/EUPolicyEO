@@ -1,0 +1,45 @@
+{
+  "snapshot_id": "0c19de8d261c9d6c464f475c",
+  "public_corpus_hash": "8e5df287a14487fef24ad20df42f9d08308e0e28a1dca2016838d714d8b093bc",
+  "model_reviewers": 20,
+  "ratings": 600,
+  "consensus_min_votes": 16,
+  "queries": 8,
+  "groups": {
+    "Earth observation": {
+      "items": 12,
+      "consensus": 11,
+      "pairwise_exact_agreement": 0.9381578947368421
+    },
+    "CORDIS projects": {
+      "items": 12,
+      "consensus": 12,
+      "pairwise_exact_agreement": 0.9916666666666667
+    },
+    "Extraction": {
+      "items": 6,
+      "consensus": 6,
+      "pairwise_exact_agreement": 0.9438596491228071
+    }
+  },
+  "search_outcomes": {
+    "direct": 1,
+    "partial": 7,
+    "unrelated": 15,
+    "unresolved": 1
+  },
+  "extraction_outcomes": {
+    "faithful": 2,
+    "need_correction": 2,
+    "materially_misleading": 2
+  },
+  "findings": {
+    "article_20_3_material_error_votes": 16,
+    "article_20_6_material_error_votes": 20
+  },
+  "endorsement": {
+    "role": "project owner",
+    "scope": "pilot findings"
+  },
+  "source_report_sha256": "4528b472b3ecb41a023f0d2a96bc61cba70f16639efbe21ec0a75c0b64b60b56"
+}

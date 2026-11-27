@@ -1,0 +1,9 @@
+max_projects: 1000
+max_collections_per_source: 200
+max_bytes: 157286400
+include_dense: true
+coverage_per_topic: 12
+projects_per_discovery_term: 6
+include_measurement_terms: true
+collections_per_measurement: 4
+include_suitability: true

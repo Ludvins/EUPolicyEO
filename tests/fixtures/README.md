@@ -1,0 +1,3 @@
+# Fixtures
+
+The upstream excerpts retain provider identifiers and factual catalogue fields. The CDSE fixture captures the 10 m Tree Cover Density collection, and the CMR fixture captures an ABoVE vegetation structure collection. The excerpts omit abstracts, account fields and direct data asset URLs. Raw official responses stay in local artifacts. The pipeline and paging tests also create authored cases for deliberate schema and failure coverage. [CDSE collection](https://stac.dataspace.copernicus.eu/v1/collections/clms_vlcc_tree-cover-density_europe_10m_yearly_v1) · [CMR dataset landing page](https://doi.org/10.3334/ORNLDAAC/1923)

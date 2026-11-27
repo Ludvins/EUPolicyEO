@@ -1,0 +1,41 @@
+{
+  "snapshot_id": "0c19de8d261c9d6c464f475c",
+  "public_corpus_hash": "f759c924ace0c06e407ecde9d7273ebe6f4808f7daf8b4a5e9a1b4729ff9b754",
+  "reviewers_per_round": 20,
+  "consensus_min_votes": 16,
+  "search_cases": 8,
+  "extraction_cases": 6,
+  "earlier": {
+    "ratings": 600,
+    "search": {
+      "direct": 1,
+      "partial": 7,
+      "unrelated": 15,
+      "unresolved": 1,
+      "empty": 0
+    },
+    "extraction": {
+      "faithful": 2,
+      "needs_correction": 2,
+      "material_errors": 2,
+      "unresolved": 0
+    }
+  },
+  "revised": {
+    "ratings": 280,
+    "search": {
+      "direct": 1,
+      "partial": 4,
+      "unrelated": 3,
+      "unresolved": 0,
+      "empty": 16
+    },
+    "extraction": {
+      "faithful": 6,
+      "needs_correction": 0,
+      "material_errors": 0,
+      "unresolved": 0
+    }
+  },
+  "source_report_sha256": "e02b43939eb53d1b2c5c05ddbc1128553aff9fe9c9849e1affd7c6dbbf2b2ab4"
+}

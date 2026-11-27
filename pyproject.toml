@@ -1,0 +1,44 @@
+[project]
+name = "eupolicyeo"
+version = "0.1.0"
+description = "Evidence-linked EU policy, research and EO discovery"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "duckdb>=1.4,<2",
+    "fastapi>=0.116,<1",
+    "httpx>=0.28,<1",
+    "lxml>=6,<7",
+    "mlflow>=3.5,<4",
+    "numpy>=2.1,<3",
+    "onnxruntime>=1.22,<2",
+    "prometheus-client>=0.22,<1",
+    "psutil>=6,<9",
+    "pyarrow>=19,<25",
+    "pydantic>=2.11,<3",
+    "pyyaml>=6,<7",
+    "tokenizers>=0.21,<1",
+    "typer>=0.16,<1",
+    "uvicorn>=0.34,<1",
+]
+[dependency-groups]
+dev = ["pytest>=8,<10", "ruff>=0.12,<1"]
+[project.scripts]
+eupolicyeo = "eupolicyeo.cli:app"
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+[tool.hatch.build.targets.sdist]
+include = ["/src", "/LICENSE", "/pyproject.toml", "/README.md", "/uv.lock"]
+[tool.hatch.build.targets.wheel]
+packages = ["src/eupolicyeo"]
+[tool.ruff]
+extend-exclude = [".cache", "artifacts", ".venv-clean"]
+line-length = 100
+target-version = "py312"
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,20 @@
+celex: "32024R1991"
+article: "20"
+language: eng
+cordis_limit: 1000
+cdse_pages: 12
+cdse_collection_ids:
+  - sentinel-2-l2a
+  - sentinel-1-grd
+  - clms_vlcc_tree-cover-density_europe_10m_yearly_v1
+  - clms_vlcc_tree-cover-density_europe_100m_yearly_v1
+  - clms_urban-atlas_land-cover-use_europe_V025ha_vector_static_v01
+  - clms_vlcc_forest-type_europe_10m_3yearly_v1
+cmr_pages: 1
+cmr_page_size: 25
+cmr_keywords: [vegetation, land cover, surface water, forest, remote sensing]
+timeout_seconds: 30
+source_budget_seconds: 150
+retries: 3
+encoder_threads: 4
+encoder_batch: 24

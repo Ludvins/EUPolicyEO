@@ -1,0 +1,76 @@
+{
+  "id": "public-evidence-holdout-v1",
+  "frozen_on": "2026-11-27",
+  "scope": "Free-text searches for evidence across Article 20-adjacent monitoring topics. The original pilot questions and legal commencement case are excluded.",
+  "top_k": 5,
+  "queries": [
+    {
+      "id": "eo-alpine-snow",
+      "corpus": "eo",
+      "query": "Snow cover extent and persistence in the European Alps",
+      "intent": "Find a satellite-derived snow cover product with repeated observations that cover the European Alps. Weather station records and snow depth without spatial extent may provide supporting context.",
+      "filters": {"bbox": [4, 43, 17, 49], "strict_metadata": true}
+    },
+    {
+      "id": "eo-soil-carbon",
+      "corpus": "eo",
+      "query": "Maps of soil organic carbon stocks in European cropland mineral topsoil",
+      "intent": "Find spatial data that estimate stocks of soil organic carbon in mineral cropland topsoil. Check the region and whether the product estimates a stock or provides only a related variable."
+    },
+    {
+      "id": "eo-forest-disturbance",
+      "corpus": "eo",
+      "query": "Map canopy loss from insect outbreaks in European conifer forests",
+      "intent": "Find mapped canopy loss or disturbance observations tied to insect damage in European conifer forests. General forest cover or canopy disturbance with no cause information can be useful context."
+    },
+    {
+      "id": "eo-lake-temperature",
+      "corpus": "eo",
+      "query": "Repeated lake surface water temperature observations in Scandinavia during 2020",
+      "intent": "Find a product that measures lake surface water temperature repeatedly in Scandinavia and covers the requested year. Lake area, sea temperature and air temperature are different measurements.",
+      "filters": {
+        "bbox": [4, 54, 32, 72],
+        "start": "2020-01-01T00:00:00Z",
+        "end": "2020-12-31T23:59:59Z",
+        "strict_metadata": true
+      }
+    },
+    {
+      "id": "eo-planetary-control",
+      "corpus": "eo",
+      "query": "Measuring oxygen concentration in the atmosphere of Jupiter’s moon Europa",
+      "intent": "Check whether a terrestrial catalogue offers irrelevant matches for a planetary question. A useful candidate needs a specific connection to atmospheric oxygen observations for Europa.",
+      "control": "out_of_domain"
+    },
+    {
+      "id": "projects-farmland-birds",
+      "corpus": "projects",
+      "query": "Using acoustic surveys to track breeding farmland birds on European farms",
+      "intent": "Find a project that uses or evaluates sound recordings to monitor breeding farmland birds in Europe. A project about general farm biodiversity needs evidence about the survey method or birds to qualify as useful."
+    },
+    {
+      "id": "projects-deadwood",
+      "corpus": "projects",
+      "query": "Testing remote sensing methods for mapping standing and fallen deadwood in forests",
+      "intent": "Find a project that develops or tests remote sensing of standing or fallen deadwood. General forest structure sensing can be supporting context if the method can be linked to deadwood measurements."
+    },
+    {
+      "id": "projects-vineyard-erosion",
+      "corpus": "projects",
+      "query": "Methods to measure soil erosion from rainfall in Mediterranean vineyards",
+      "intent": "Find a project that measures or models rain-driven soil erosion in vineyards under Mediterranean conditions. Broad agricultural sustainability work needs a transferable erosion measurement or comparable trial."
+    },
+    {
+      "id": "projects-seagrass",
+      "corpus": "projects",
+      "query": "Mapping submerged seagrass meadow extent from underwater or satellite imagery",
+      "intent": "Find a project that uses underwater or satellite imagery to map seagrass meadow extent. Restoration research can provide context if its methods address seagrass distribution."
+    },
+    {
+      "id": "projects-freshwater-edna",
+      "corpus": "projects",
+      "query": "Standardized monitoring of freshwater fish communities using environmental DNA",
+      "intent": "Find a project that uses or validates environmental DNA to monitor freshwater fish communities. Research on eDNA methods or freshwater fish survey protocols may offer transferable evidence."
+    }
+  ]
+}

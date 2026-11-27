@@ -1,0 +1,64 @@
+{
+  "release_id": "e9faf5420e44813daae93bc4",
+  "snapshot_id": "5ed3d4d678b09a79ad422601",
+  "public_corpus_hash": "ad8b7789bc20723e40d93c62fb4c175173bef8f0bb0d8888eec4179f6229e9a7",
+  "records": 1400,
+  "topics": {
+    "stable_id": 4,
+    "topic_selection": 7,
+    "total": 10
+  },
+  "replay": {
+    "cases": 8,
+    "slots": 24,
+    "prior": {
+      "cases_with_sample": 2,
+      "filled_sample_slots": 5
+    },
+    "expanded": {
+      "cases_with_sample": 4,
+      "filled_sample_slots": 12
+    }
+  },
+  "source_reports_sha256": {
+    "original-cases-pages-9083ff882a6a79373ed5fd58.json": "46301c678a555b3b1cdca5a1b286f0eeab8426aedcaba01a7e2406c22ba2ca36",
+    "original-cases-pages-e9faf5420e44813daae93bc4.json": "453d15d5a5a7b98bcb0240f446265a04319c56e22aae045d0a39f908be195fe5",
+    "public-subset-probe.json": "883a7425d762a02144211d065e233c38ece247dbad35b461b38716d0a2c04871"
+  },
+  "holdout": {
+    "review_type": "model consensus",
+    "human_judgments": 0,
+    "queries": 10,
+    "candidate_pairs": 84,
+    "ratings": 252,
+    "ballots_per_pair": 3,
+    "reviewer_runs": 9,
+    "pairwise_exact_agreement": 0.9603174603174603,
+    "unresolved_pairs": 0,
+    "control": {
+      "bm25_returned": 5,
+      "dense_returned": 5,
+      "bm25_irrelevant": 5,
+      "dense_irrelevant": 5
+    },
+    "bm25": {
+      "queries": 10,
+      "fully_judged_queries": 10,
+      "empty_queries": 0,
+      "direct_at_1": 2,
+      "direct_at_3": 2,
+      "direct_at_5": 2,
+      "useful_at_5": 4
+    },
+    "dense": {
+      "queries": 10,
+      "fully_judged_queries": 10,
+      "empty_queries": 0,
+      "direct_at_1": 2,
+      "direct_at_3": 2,
+      "direct_at_5": 2,
+      "useful_at_5": 6
+    },
+    "source_report_sha256": "4472e4138042d0ade6af03943a094a9ed33ddea5487f8d2edc0cf01e44f519f2"
+  }
+}

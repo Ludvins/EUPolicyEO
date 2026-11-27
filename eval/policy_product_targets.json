@@ -1,0 +1,20 @@
+{
+  "id": "policy-product-known-records-v1",
+  "snapshot": "5ed3d4d678b09a79ad422601",
+  "scope": "Known-item discovery. The target IDs identify source-backed products and projects. Other returned records are unjudged.",
+  "cases": [
+    {"id":"canopy", "corpus":"eo", "query":"Percentage of ground covered by tree crowns at 10 metres across Europe", "target_prefix":"cdse:clms_vlcc_tree-cover-density_europe_10m_yearly_v1"},
+    {"id":"urban-land", "corpus":"eo", "query":"European city land use polygons with a quarter-hectare minimum map unit", "target_prefix":"cdse:clms_urban-atlas_land-cover-use_europe_V025ha_vector_static_v01"},
+    {"id":"chlorophyll", "corpus":"eo", "query":"Satellite observations of chlorophyll a concentration in lakes, 300 metre", "target_prefix":"cdse:clms_lwq-nrt_global_300m_10daily_v2"},
+    {"id":"cyanobacteria", "corpus":"eo", "query":"Global inland lake floating cyanobacteria observations at 100 metre resolution", "target_prefix":"cdse:clms_lwq-nrt_global_100m_10daily_v2"},
+    {"id":"mowing", "corpus":"eo", "query":"When grass was cut in European meadows, mapped each year at ten metres", "target_prefix":"cdse:clms_vlcc_grassland-mowing-dates_europe_10m_yearly_v1"},
+    {"id":"snow", "corpus":"eo", "query":"Daily fraction of snow on the ground at 20 metres in Europe", "target_prefix":"cdse:clms_wsi_fractional-snow-cover_europe_utm_20m_daily_v2"},
+    {"id":"leaf", "corpus":"eo", "query":"Global 300 metre leaf area per unit ground surface, at ten-day intervals", "target_prefix":"cdse:clms_lai_global_300m_10daily_v2"},
+    {"id":"lake-temperature", "corpus":"eo", "query":"Global one kilometre satellite product of inland lake surface temperatures, near real time", "target_prefix":"cdse:clms_lswt-nrt_global_1km_10daily_v1"},
+    {"id":"green-vegetation", "corpus":"eo", "query":"Fraction of green vegetation cover (FCOVER), global 300 metres, version two", "target_prefix":"cdse:clms_fcover_global_300m_10daily_v2"},
+    {"id":"bird-sound", "corpus":"projects", "query":"Passive acoustic monitoring protocol for birds on farms in Europe", "target_prefix":"cordis:101090273"},
+    {"id":"edna-reference", "corpus":"projects", "query":"Standardised reference library of aquatic species for water or sediment environmental DNA monitoring", "target_prefix":"cordis:101112800"},
+    {"id":"pollinators", "corpus":"projects", "query":"European research measuring risks of pesticide exposure to wild pollinating insects, PollinERA", "target_prefix":"cordis:101135005"},
+    {"id":"forest-structure", "corpus":"projects", "query":"Laser scanning forest structure to track disturbances and recovery with digital twins", "target_prefix":"cordis:101039795"}
+  ]
+}

@@ -1,0 +1,1 @@
+{"extent": {"spatial": {"bbox": [[-180, -90, 180, 90]]}, "temporal": {"interval": [["2018-01-01T00:00:00.000Z", null]]}}, "id": "clms_vlcc_tree-cover-density_europe_10m_yearly_v1", "license": "proprietary", "title": "CLMS VLCC Tree Cover Density (TCD) Europe 10m yearly V1 (COG)"}

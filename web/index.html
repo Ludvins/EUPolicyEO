@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Search European research and Earth observation collections with links to the source evidence.">
+    <meta name="theme-color" content="#f5f8f6">
+    <title>EUPolicyEO | Evidence Explorer</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="site-width" aria-label="Main navigation">
+        <a class="brand" href="#explorer"><span class="brand-mark" aria-hidden="true"></span>EUPolicyEO</a>
+        <div class="nav-links">
+          <a href="#explorer">Explorer</a>
+          <a id="assessment-nav" href="#assessment" hidden>Assessment</a>
+          <a href="#dataset">Dataset</a>
+        </div>
+      </nav>
+    </header>
+    <main id="explorer" class="site-width">
+      <section class="intro" aria-labelledby="page-title">
+        <div class="intro-copy">
+          <h1 id="page-title">Evidence explorer</h1>
+          <p>Find research projects and Earth observation collections that can inform EU monitoring. Start with your own query or a provision from Article 20.</p>
+          <a class="assessment-entry" id="assessment-entry" href="#assessment" hidden>See the Andalusia worked example <span aria-hidden="true">↓</span></a>
+        </div>
+      </section>
+      <p id="load-status" class="status" role="status">Loading the dataset…</p>
+      <button id="retry" type="button" hidden>Retry loading</button>
+      <section id="workspace" hidden aria-label="Search explorer">
+        <form id="search-form" class="search-panel">
+          <div class="search-settings">
+            <div class="starting-point">
+              <label for="requirement">Search starting point</label>
+              <select id="requirement" aria-describedby="starting-point-help">
+                <option value="">Free-text search</option>
+                <optgroup id="legal-examples" label="Real legal provisions · Article 20"></optgroup>
+              </select>
+              <p id="starting-point-help" class="field-note">Choose a legal query example to fill the search.</p>
+            </div>
+            <div class="search-mode">
+              <label for="mode">Search mode</label>
+              <select id="mode">
+                <option value="bm25">Keyword search</option>
+                <option value="dense" disabled>Semantic search</option>
+                <option value="hybrid" disabled>Hybrid search</option>
+              </select>
+            </div>
+          </div>
+          <div id="evidence" class="citation" hidden></div>
+          <div class="search-input">
+            <label for="query">Search query</label>
+            <div class="search-line">
+              <input id="query" type="search" maxlength="2000" required placeholder="e.g. Urban tree canopy cover">
+              <button type="submit">Search</button>
+            </div>
+          </div>
+          <div id="search-examples" class="search-examples"></div>
+          <details class="filter-panel" id="collection-filters">
+            <summary>Collection filters</summary>
+            <p class="field-note">Dates and bounds describe catalogue coverage. Check the source for individual observations.</p>
+            <div class="dates">
+              <label>From (UTC)<input id="start" type="date"></label>
+              <label>Through (UTC)<input id="end" type="date"></label>
+            </div>
+            <fieldset class="coordinate-panel">
+              <legend>Bounding box</legend>
+              <div class="coordinates">
+                <label>West<input id="west" type="number" min="-180" max="180" step="any" aria-describedby="coordinate-help"></label>
+                <label>South<input id="south" type="number" min="-90" max="90" step="any" aria-describedby="coordinate-help"></label>
+                <label>East<input id="east" type="number" min="-180" max="180" step="any" aria-describedby="coordinate-help"></label>
+                <label>North<input id="north" type="number" min="-90" max="90" step="any" aria-describedby="coordinate-help"></label>
+              </div>
+              <p class="field-note" id="coordinate-help">Enter decimal degrees. West greater than east crosses the 180° meridian.</p>
+            </fieldset>
+            <details id="map-details" class="map-panel">
+              <summary>Draw or view area on map</summary>
+              <p id="map-status" class="field-note" role="status"></p>
+              <div id="map-body" hidden>
+                <div class="map-toolbar">
+                  <div class="map-switch" role="group" aria-label="Map tool">
+                    <button id="map-pan" type="button" aria-pressed="true">Pan map</button>
+                    <button id="map-draw" type="button" aria-pressed="false">Draw area</button>
+                  </div>
+                  <div class="map-place-control">
+                    <label for="map-place">Find a city</label>
+                    <input id="map-place" type="search" list="map-places" placeholder="e.g. Seville" autocomplete="off">
+                    <datalist id="map-places"></datalist>
+                    <button id="map-place-go" type="button">Go</button>
+                  </div>
+                </div>
+                <p id="map-place-status" class="field-note" role="status"></p>
+                <p class="field-note" id="map-help">Drag to pan. Use + and −, or pinch, to zoom. Choose Draw area to select or refine a box.</p>
+                <div class="map-frame">
+                  <canvas id="area-map" width="1000" height="500" tabindex="0" role="img" data-mode="pan" aria-label="Area of interest and selected collection extent" aria-describedby="map-help"></canvas>
+                  <div class="map-zoom" role="group" aria-label="Map zoom">
+                    <button id="map-zoom-in" type="button" aria-label="Zoom in" title="Zoom in">+</button>
+                    <button id="map-zoom-out" type="button" aria-label="Zoom out" title="Zoom out">−</button>
+                  </div>
+                </div>
+                <div class="map-actions">
+                  <button id="map-fit" type="button" disabled>Fit area</button>
+                  <button id="map-world" type="button">World view</button>
+                  <button id="map-example" type="button" title="Use an approximate bounding box for Andalusia">Andalusia example</button>
+                  <button id="map-clear" type="button" hidden>Clear collection extent</button>
+                </div>
+                <ul class="map-legend" aria-label="Map legend">
+                  <li><span class="requested-area"></span>Area of interest</li>
+                  <li><span class="overlap"></span>Collection extent / intersects area</li>
+                  <li><span class="outside"></span>Outside area</li>
+                </ul>
+                <p id="map-selection" class="field-note" role="status"></p>
+                <small class="map-credit">Map data from <a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener noreferrer">Natural Earth</a>.</small>
+              </div>
+            </details>
+            <label class="check"><input id="strict" type="checkbox"> Hide collections with known incompatible metadata</label>
+          </details>
+        </form>
+        <p id="search-status" class="status search-status" role="status"></p>
+        <button id="fallback" class="secondary-button" hidden type="button">Search with BM25</button>
+        <details id="embedding-map" class="embedding-panel" hidden>
+          <summary>Embedding map</summary>
+          <div id="embedding-content"></div>
+        </details>
+        <div class="results">
+          <section aria-labelledby="eo-title"><h2 id="eo-title">EO collections</h2><div id="eo"></div></section>
+          <section aria-labelledby="projects-title"><h2 id="projects-title">Research projects</h2><div id="projects"></div></section>
+        </div>
+      </section>
+      <section class="portfolio-section assessment" id="assessment" hidden aria-labelledby="assessment-title">
+        <h2 id="assessment-title">Urban monitoring assessment</h2>
+        <div id="assessment-content"></div>
+      </section>
+      <section class="portfolio-section" id="dataset" aria-labelledby="dataset-title">
+        <h2 id="dataset-title">Dataset and methodology</h2>
+        <p class="field-note">This explorer searches a fixed release in your browser. Each record links to its source.</p>
+        <div id="dataset-data"></div>
+      </section>
+    </main>
+    <dialog id="record-details" class="record-dialog" aria-label="Source record details">
+      <form method="dialog" class="dialog-toolbar">
+        <button type="submit" id="record-close" class="secondary-button">Close</button>
+      </form>
+      <div id="record-content"></div>
+    </dialog>
+    <footer class="site-width site-footer">
+      <span>Independent research project</span>
+      <a href="#dataset">Data sources and terms</a>
+    </footer>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

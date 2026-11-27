@@ -1,0 +1,172 @@
+#record-details .dialog-toolbar {
+  position: sticky;
+  z-index: 1;
+  top: 0;
+}
+
+.record-heading {
+  margin-bottom: 1.35rem;
+}
+
+.record-heading h2 {
+  max-width: 32ch;
+  margin: .35rem 0 .65rem;
+  font-size: clamp(1.35rem, 3.9vw, 2rem);
+  line-height: 1.17;
+  overflow-wrap: anywhere;
+}
+
+.record-heading h2:focus {
+  outline: none;
+}
+
+.record-label {
+  margin: 0;
+  color: var(--muted, #4d665b);
+  font-size: .83rem;
+  font-weight: 650;
+}
+
+.record-description {
+  margin: .55rem 0;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+
+.record-actions, .record-secondary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .65rem .9rem;
+  margin-top: .95rem;
+}
+
+.record-actions .record-primary, .record-actions .record-map {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  padding: .4rem .75rem;
+  border-radius: .55rem;
+  font-size: .88rem;
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+.record-actions .record-primary {
+  color: #fff;
+  background: #255d48;
+  border: 1px solid #255d48;
+  text-decoration: none;
+}
+
+.record-actions .record-primary:hover {
+  background: #184533;
+}
+
+.record-actions .record-map {
+  color: #255d48;
+  border: 1px solid var(--line, #d9e4dc);
+  background: transparent;
+  white-space: normal;
+}
+
+.record-actions .record-map:hover {
+  background: #eff5ef;
+}
+
+.record-section {
+  padding: 1rem 0;
+  border-top: 1px solid var(--line, #d9e4dc);
+}
+
+.record-section h3 {
+  margin: 0 0 .75rem;
+  font-size: .98rem;
+}
+
+.record-section p {
+  margin: .5rem 0 0;
+}
+
+.record-note, .record-secondary {
+  color: var(--muted, #4d665b);
+  font-size: .85rem;
+}
+
+.record-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(9rem, 100%), 1fr));
+  gap: .7rem 1rem;
+  margin: 0;
+}
+
+.record-facts div {
+  min-width: 0;
+}
+
+.record-facts dt {
+  margin: 0 0 .15rem;
+  color: var(--muted, #4d665b);
+  font-size: .79rem;
+}
+
+.record-facts dd {
+  margin: 0;
+  font-size: .91rem;
+  font-weight: 580;
+  overflow-wrap: anywhere;
+}
+
+.record-match .record-facts dd {
+  font-variant-numeric: tabular-nums;
+}
+
+.record-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.record-tags li {
+  max-width: 100%;
+  padding: .24rem .55rem;
+  color: #385749;
+  background: #edf4ef;
+  border-radius: .48rem;
+  font-size: .78rem;
+  overflow-wrap: anywhere;
+}
+
+.record-coverage-table {
+  width: 100%;
+  margin-top: .6rem;
+  border-collapse: collapse;
+  font-size: .8rem;
+  font-variant-numeric: tabular-nums;
+  text-align: left;
+}
+
+.record-coverage-table td, .record-coverage-table th {
+  padding: .28rem .4rem;
+  border-bottom: 1px solid var(--line, #d9e4dc);
+}
+
+.record-provenance .record-facts {
+  grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr));
+  margin-top: .75rem;
+}
+
+.record-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

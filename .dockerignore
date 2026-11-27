@@ -1,0 +1,11 @@
+.git
+.cache
+.venv
+.venv-clean
+artifacts
+web
+__pycache__
+.env
+dist
+docs/status.md
+EUPolicyEO_SPEC_v1.1.md

@@ -1,0 +1,185 @@
+.release-panels {
+  --rp-ink: var(--ink, #142b29);
+  --rp-muted: var(--muted, #526763);
+  --rp-line: var(--line, #dbe6e1);
+  --rp-accent: var(--accent, #0f7059);
+  --rp-surface: var(--surface, white);
+  --rp-canvas: var(--canvas, #f4f7f5);
+  color: var(--rp-ink);
+  min-width: 0;
+}
+
+.rp-source-grid {
+  display: grid;
+  gap: clamp(.65rem, 1.6vw, 1rem);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.rp-source-grid:has(.rp-source details[open]) { align-items: start; }
+
+.rp-source {
+  padding: clamp(.95rem, 1.8vw, 1.35rem);
+  min-width: 0;
+  background: linear-gradient(160deg, var(--rp-surface) 35%, var(--rp-canvas));
+  border: 1px solid var(--rp-line);
+  border-radius: 14px;
+}
+
+.rp-source h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 720;
+  letter-spacing: -.022em;
+  line-height: 1.25;
+}
+
+.rp-source-heading p {
+  margin: .2rem 0 0;
+  color: var(--rp-muted);
+  font-size: .8rem;
+}
+
+.rp-quantity {
+  display: grid;
+  gap: .18rem;
+  margin: 1.35rem 0 1.05rem;
+}
+
+.rp-quantity strong {
+  font-size: clamp(2.1rem, 4vw, 2.85rem);
+  font-weight: 680;
+  letter-spacing: -.065em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.rp-quantity strong { color: var(--rp-accent); }
+.rp-quantity span { color: var(--rp-muted); font-size: .84rem; }
+
+.rp-source-date {
+  color: var(--rp-muted);
+  font-size: .78rem;
+  margin: 0;
+}
+
+.release-panels .rp-disclosure {
+  border: 0;
+  margin: .85rem 0 0;
+  padding: 0;
+}
+
+.release-panels .rp-disclosure > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .65rem;
+  color: var(--rp-accent);
+  min-height: 1.85rem;
+  list-style: none;
+  font-size: .83rem;
+  font-weight: 690;
+  cursor: pointer;
+}
+
+.rp-disclosure > summary::-webkit-details-marker { display: none; }
+.rp-disclosure > summary::after {
+  content: "";
+  width: .4rem;
+  height: .4rem;
+  border: solid currentColor;
+  border-width: 0 1.5px 1.5px 0;
+  transform: translateY(-1px) rotate(45deg);
+  flex: 0 0 .4rem;
+  margin-inline-end: .2rem;
+}
+.rp-disclosure[open] > summary::after { transform: translateY(2px) rotate(225deg); }
+.rp-disclosure > summary:hover { text-decoration: underline; text-underline-offset: .2em; }
+
+.release-panels .rp-source > .rp-disclosure {
+  border-top: 1px solid var(--rp-line);
+  padding-top: .48rem;
+}
+
+.rp-disclosure > p,
+.rp-disclosure > a,
+.rp-bound-list {
+  margin: .6rem 0 0;
+  font-size: .82rem;
+  overflow-wrap: anywhere;
+}
+
+.release-panels .rp-bound-list {
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+.release-panels .rp-bound-list li {
+  margin: 0;
+  padding-block: .3rem;
+  border-top: 1px solid var(--rp-line);
+}
+
+.release-panels .rp-box {
+  background: var(--rp-canvas);
+  border: 1px solid var(--rp-line);
+  border-radius: 12px;
+  margin-top: 1rem;
+  padding: .65rem 1rem;
+}
+
+.release-panels .rp-box > summary {
+  color: var(--rp-ink);
+  min-height: 2rem;
+  font-size: .92rem;
+}
+
+.rp-box[open] { padding-bottom: 1rem; }
+.rp-box[open] > summary { margin-bottom: .65rem; }
+
+.rp-definitions { margin: 0; }
+.rp-definitions dd { margin: 0; }
+
+.rp-provenance {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 1.5rem;
+}
+
+.rp-provenance > div {
+  min-width: 0;
+  border-top: 1px solid var(--rp-line);
+  padding-block: .65rem;
+}
+
+.rp-provenance dt {
+  color: var(--rp-muted);
+  font-size: .75rem;
+  margin-bottom: .15rem;
+}
+
+.rp-provenance dd {
+  overflow-wrap: anywhere;
+  font-size: .86rem;
+}
+
+.rp-provenance code {
+  display: block;
+  white-space: normal;
+  font-size: .76rem;
+}
+
+@media (max-width: 54rem) {
+  .rp-source-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 44rem) {
+  .rp-provenance { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 34rem) and (min-width: 23.01rem) {
+  .rp-source-heading { min-height: 3.6rem; }
+}
+
+@media (max-width: 23rem) {
+  .rp-source-grid { grid-template-columns: minmax(0, 1fr); }
+}

@@ -1,0 +1,46 @@
+services:
+  mlflow:
+    build: .
+    command: ["mlflow", "server", "--backend-store-uri", "sqlite:////data/tracking.db", "--serve-artifacts", "--artifacts-destination", "/data/mlflow-objects", "--host", "0.0.0.0", "--port", "5000", "--workers", "1", "--allowed-hosts", "mlflow:5000,localhost:*,127.0.0.1:*"]
+    environment:
+      MLFLOW_DISABLE_AGENT_HINT: "1"
+    volumes:
+      - registry:/data
+    ports:
+      - "127.0.0.1:${EUPOLICYEO_MLFLOW_PORT:-5000}:5000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "from urllib.request import urlopen; urlopen('http://127.0.0.1:5000/health', timeout=2)"]
+      interval: 10s
+      timeout: 4s
+      retries: 15
+  api:
+    build: .
+    environment:
+      MLFLOW_TRACKING_URI: http://mlflow:5000
+      MLFLOW_HTTP_REQUEST_TIMEOUT: "20"
+      MLFLOW_HTTP_REQUEST_MAX_RETRIES: "1"
+      MLFLOW_DISABLE_AGENT_HINT: "1"
+    volumes:
+      - ./artifacts:/data:ro
+    depends_on:
+      mlflow:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "from urllib.request import urlopen; urlopen('http://127.0.0.1:8000/readyz', timeout=2)"]
+      interval: 10s
+      timeout: 4s
+      retries: 15
+  prometheus:
+    image: prom/prometheus:v3.5.1
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - metrics:/prometheus
+    ports:
+      - "127.0.0.1:9090:9090"
+    depends_on:
+      - api
+volumes:
+  registry:
+  metrics:

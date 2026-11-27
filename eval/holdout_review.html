@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+  <title>Catalogue evidence review</title>
+  <style>
+    :root { color-scheme: light; --ink: #17332c; --muted: #52675e; --line: #ccd9d1; --accent: #175a49; font: 16px/1.5 system-ui, sans-serif; color: var(--ink); background: #f4f7f3; }
+    * { box-sizing: border-box; }
+    body { width: min(960px, calc(100% - 2rem)); margin: 2rem auto 4rem; }
+    h1 { font-size: clamp(1.8rem, 6vw, 2.8rem); line-height: 1.15; margin-bottom: .5rem; }
+    h2 { margin: 0; font-size: 1.05rem; }
+    p { margin: .45rem 0 .8rem; }
+    a { color: var(--accent); text-decoration-thickness: .09em; text-underline-offset: .17em; }
+    .rubric { display: grid; gap: .5rem; padding-left: 1.25rem; }
+    .controls, details { margin: 1rem 0; background: white; border: 1px solid var(--line); border-radius: 10px; }
+    .controls, .contents { padding: 1rem; }
+    label { display: block; margin: .3rem 0; font-weight: 600; }
+    input, select, textarea, button { font: inherit; }
+    input[type=text], select, textarea { width: 100%; max-width: 100%; border: 1px solid #8ca698; border-radius: 5px; padding: .36rem .55rem; background: #fff; color: var(--ink); }
+    input[type=text] { width: min(18rem, 100%); }
+    summary { padding: .9rem 1rem; cursor: pointer; font-weight: 650; }
+    article { padding: 1rem 0; border-top: 1px solid var(--line); }
+    .fields { display: grid; gap: .75rem; grid-template-columns: minmax(13rem, 1fr) minmax(14rem, 2fr); }
+    .muted { color: var(--muted); }
+    button { cursor: pointer; border: 0; border-radius: 5px; padding: .5rem .8rem; background: var(--accent); color: white; font-weight: 650; }
+    progress { width: 100%; height: .6rem; accent-color: var(--accent); }
+    :focus-visible { outline: 3px solid #126bba; outline-offset: 2px; }
+    @media (max-width: 38rem) { .fields { grid-template-columns: 1fr; gap: .15rem; } }
+  </style>
+</head>
+<body data-packet="__PACKET_SHA__">
+  <main>
+    <h1>Catalogue evidence review</h1>
+    <p>Read each question, open the source records, and judge how much evidence each candidate provides. Candidate order is shuffled. Each question covers one catalogue.</p>
+    <ul class="rubric">
+      <li><strong>2 · Direct evidence.</strong> The source supports the requested measurement or research method and the stated scope.</li>
+      <li><strong>1 · Useful partial evidence.</strong> The source provides a relevant variable, transferable method or useful context with a clear gap.</li>
+      <li><strong>0 · Unrelated.</strong> The source offers no useful evidence for this question.</li>
+    </ul>
+    <p>Leave a candidate unscored if you cannot verify it. Add a brief reason to each rating. Date or geographic coverage by itself does not establish that the record measures the requested variable.</p>
+    <form id="review">
+      <div class="controls">
+        <label for="reviewer">Reviewer name or initials</label>
+        <input id="reviewer" type="text" maxlength="100" required>
+        <label for="resume">Resume a saved review</label>
+        <input id="resume" type="file" accept=".json,application/json">
+        <p><label><input id="confirmed" type="checkbox" required> I entered these ratings myself after checking the evidence.</label></p>
+        <button type="submit">Download judgments</button>
+        <p class="muted">Download any time to save progress. Finish a question’s candidate list to include it in quality metrics.</p>
+        <progress aria-label="Candidate judgments completed"></progress>
+        <p id="progress" aria-live="polite"></p>
+        <p id="status" role="status"></p>
+      </div>
+      <!-- QUESTION_CARDS -->
+    </form>
+  </main>
+  <script>
+    const form = document.querySelector("#review");
+    const packet = document.body.dataset.packet;
+    const cards = Array.from(document.querySelectorAll("[data-pair]"));
+    const fields = card => [card.querySelector("select"), card.querySelector("textarea")];
+    const status = document.querySelector("#status");
+    const reviewer = document.querySelector("#reviewer");
+    function progress() {
+      const count = cards.filter(card => {
+        const [grade, note] = fields(card);
+        return grade.value && note.value.trim();
+      }).length;
+      const meter = document.querySelector("progress");
+      meter.max = Math.max(cards.length, 1);
+      meter.value = count;
+      document.querySelector("#progress").textContent = count + " of " + cards.length + " candidate judgments complete.";
+    }
+    form.addEventListener("input", progress);
+    document.querySelector("#resume").addEventListener("change", async event => {
+      try {
+        const file = event.target.files[0];
+        if (!file) return;
+        const saved = JSON.parse(await file.text());
+        if (saved.packet_sha256 !== packet || typeof saved.reviewer !== "string" ||
+            !saved.judgments || typeof saved.judgments !== "object") throw new Error();
+        reviewer.value = saved.reviewer;
+        for (const card of cards) {
+          const [grade, note] = fields(card);
+          const row = saved.judgments[card.dataset.pair];
+          grade.value = [0, 1, 2].includes(row?.relevance) ? String(row.relevance) : "";
+          note.value = typeof row?.reason === "string" ? row.reason : "";
+        }
+        document.querySelector("#confirmed").checked = false;
+        status.textContent = "Saved judgments restored.";
+        progress();
+      } catch {
+        status.textContent = "Choose a judgments file from this worksheet.";
+      }
+    });
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      const judgments = {};
+      for (const card of cards) {
+        const [grade, note] = fields(card);
+        if (grade.value || note.value.trim()) judgments[card.dataset.pair] = {
+          relevance: grade.value ? Number(grade.value) : null,
+          reason: note.value.trim(),
+        };
+      }
+      if (!reviewer.value.trim() || !Object.keys(judgments).length) {
+        status.textContent = "Enter your name or initials and at least one judgment.";
+        return;
+      }
+      const payload = { packet_sha256: packet, reviewer: reviewer.value.trim(), human_review: true, judgments };
+      const download = document.createElement("a");
+      download.href = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2) + "\n"], { type: "application/json" }));
+      download.download = "holdout-judgments.json";
+      download.click();
+      setTimeout(() => URL.revokeObjectURL(download.href), 1000);
+      status.textContent = "Judgments downloaded.";
+    });
+    progress();
+  </script>
+</body>
+</html>

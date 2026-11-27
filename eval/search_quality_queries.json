@@ -1,0 +1,73 @@
+{
+  "id": "public-free-text-comparison-v1",
+  "frozen_on": "2026-11-27",
+  "scope": "Fresh free-text evidence requests for a paired browser-release comparison. The previously reviewed ten questions and Article 20 preset cases are excluded.",
+  "top_k": 5,
+  "queries": [
+    {
+      "id": "eo-urban-night-temperature",
+      "corpus": "eo",
+      "query": "Satellite maps of nighttime land surface temperature in European cities",
+      "intent": "Find a gridded satellite product that measures land surface temperature at night and covers European cities. Daytime-only products and air temperature are separate measurements. An urban heat map with unclear time of day can supply partial evidence.",
+      "filters": {"bbox": [-12, 35, 33, 62], "strict_metadata": true}
+    },
+    {
+      "id": "eo-ocean-salinity",
+      "corpus": "eo",
+      "query": "Monthly satellite sea surface salinity in the North Atlantic",
+      "intent": "Find satellite-derived surface salinity measurements with North Atlantic coverage and monthly sampling or aggregation. Gridded satellite salinity at a different cadence can be useful if monthly estimates can be calculated from it.",
+      "filters": {"bbox": [-78, 16, -8, 62], "strict_metadata": true}
+    },
+    {
+      "id": "eo-leaf-area",
+      "corpus": "eo",
+      "query": "Global satellite leaf area index time series",
+      "intent": "Find a global satellite collection with repeated leaf area index measurements. Vegetation indices, fraction of cover and chlorophyll are separate variables that can provide context."
+    },
+    {
+      "id": "eo-australia-burned-area",
+      "corpus": "eo",
+      "query": "Satellite maps of land burned by wildfires in Australia",
+      "intent": "Find mapped burned-area observations covering Australia. Active-fire detections, fire danger and smoke products measure different quantities. A suitable proxy or a map covering only part of Australia can provide useful partial evidence.",
+      "filters": {"bbox": [112, -44, 154, -10], "strict_metadata": true}
+    },
+    {
+      "id": "eo-retinal-control",
+      "corpus": "eo",
+      "query": "Fluorescence microscopy images of human retinal tissue sections",
+      "intent": "The requested observation is a microscopy image of a human retinal tissue section. A reference to fluorescence, imaging or a spectral band alone does not establish relevance.",
+      "control": "out_of_domain"
+    },
+    {
+      "id": "projects-irrigation-moisture",
+      "corpus": "projects",
+      "query": "Farm projects that use satellite soil moisture to schedule irrigation",
+      "intent": "Find a research project that uses or tests satellite-derived soil moisture for deciding when or how much to irrigate. A farm irrigation study using only in-situ moisture sensing, or a satellite soil moisture project with no irrigation application, can provide useful partial evidence."
+    },
+    {
+      "id": "projects-radar-subsidence",
+      "corpus": "projects",
+      "query": "Using satellite radar interferometry to monitor land subsidence",
+      "intent": "Find a research project applying or testing satellite radar interferometry for ground subsidence. Satellite radar deformation methods validated on a different related phenomenon can provide partial evidence if the method is transferable."
+    },
+    {
+      "id": "projects-building-thermography",
+      "corpus": "projects",
+      "query": "Projects testing infrared thermography to measure heat loss from buildings",
+      "intent": "Find a project using thermal infrared images to assess heat loss through building envelopes. Building energy work without thermal measurement or imaging offers a weaker connection. Thermography applied to comparable thermal leakage can provide useful partial evidence."
+    },
+    {
+      "id": "projects-city-nitrogen-dioxide",
+      "corpus": "projects",
+      "query": "Field trials of nitrogen dioxide air quality sensors in European cities",
+      "intent": "Find a research project that deploys or validates devices measuring nitrogen dioxide in an urban European setting. Other air pollutants or laboratory-only sensor testing can count as partial if the instrumentation is transferable."
+    },
+    {
+      "id": "projects-train-departure-control",
+      "corpus": "projects",
+      "query": "Live Madrid Atocha commuter train departures today",
+      "intent": "The requested answer requires a live station departure feed for Madrid Atocha. Railway grants, published transport research and references to Madrid alone do not supply current departures.",
+      "control": "out_of_domain"
+    }
+  ]
+}

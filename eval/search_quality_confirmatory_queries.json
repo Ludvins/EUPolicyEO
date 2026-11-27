@@ -1,0 +1,60 @@
+{
+  "id": "public-free-text-confirmatory-v1",
+  "frozen_on": "2026-11-27",
+  "scope": "Confirmatory free-text comparison across six topical questions and two clear domain controls. The original holdout and the first free-text diagnostic are excluded.",
+  "top_k": 5,
+  "queries": [
+    {
+      "id": "eo-european-grassland-mowing",
+      "corpus": "eo",
+      "query": "Satellite maps of grassland mowing dates in Europe",
+      "intent": "Find a satellite-derived product that maps when mowing occurred on European grasslands. A layer containing mowing frequency without event dates or detecting management disturbances with an ambiguous cause can provide useful partial evidence.",
+      "filters": {"bbox": [-12, 35, 33, 62], "strict_metadata": true}
+    },
+    {
+      "id": "eo-inland-lake-chlorophyll",
+      "corpus": "eo",
+      "query": "Satellite measurements of chlorophyll-a in lakes",
+      "intent": "Find a satellite-derived chlorophyll-a product covering inland lakes. A lake-water quality index or algal bloom product can provide context, while an ocean-only product fails the required setting."
+    },
+    {
+      "id": "eo-arctic-sea-ice",
+      "corpus": "eo",
+      "query": "Monthly sea ice concentration in the Arctic Ocean",
+      "intent": "Find repeated measurements of the fraction of Arctic Ocean surface covered by sea ice, with monthly estimates or sufficiently frequent observations to derive them. Ice age, snow cover, lake ice and ice thickness are different measurements.",
+      "filters": {"bbox": [-180, 66, 180, 90], "strict_metadata": true}
+    },
+    {
+      "id": "eo-steel-diffraction-control",
+      "corpus": "eo",
+      "query": "Laboratory X-ray diffraction patterns of a steel crystal lattice",
+      "intent": "The requested record is laboratory X-ray diffraction data for crystalline steel. Remote-sensing imagery, wavelength information and mineral maps do not provide the requested laboratory measurement.",
+      "control": "out_of_domain"
+    },
+    {
+      "id": "projects-airborne-lidar-biomass",
+      "corpus": "projects",
+      "query": "Projects that estimate forest biomass with airborne lidar",
+      "intent": "Find a project that implements or tests airborne lidar for estimating forest biomass. A lidar forest structure study with no stated biomass estimate can be useful partial evidence. A biomass study using only a different sensor also has a method gap."
+    },
+    {
+      "id": "projects-flood-satellite",
+      "corpus": "projects",
+      "query": "Research projects that map flooding using satellite images",
+      "intent": "Find a project that uses satellite imagery to map observed inundation. Flood forecasting based on satellite inputs can provide supporting evidence if it addresses inundation mapping. General climate adaptation is insufficient."
+    },
+    {
+      "id": "projects-marine-litter",
+      "corpus": "projects",
+      "query": "Projects that detect plastic litter at sea with remote sensing",
+      "intent": "Find a project developing or applying remote sensing to detect marine plastic litter. Transferable sensing methods for plastic in another aquatic setting or in-situ marine litter detection with no remote observations can be partial evidence."
+    },
+    {
+      "id": "projects-sourdough-recipe-control",
+      "corpus": "projects",
+      "query": "A step-by-step sourdough bread recipe for home baking",
+      "intent": "The requested answer is a usable home recipe with ingredients and instructions. A project that mentions bread, fermentation or fermentation microbiology does not supply the recipe unless its source provides those steps.",
+      "control": "out_of_domain"
+    }
+  ]
+}
